@@ -1,8 +1,13 @@
 name: Delete Old Artifacts
+
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 0' # Run weekly
+
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   delete-artifacts:
@@ -16,6 +21,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
+
             for (const artifact of artifacts.data.artifacts) {
               if (artifact.name === 'github-pages') {
                 await github.rest.actions.deleteArtifact({
