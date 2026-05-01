@@ -106,7 +106,7 @@ function renderPost(post) {
         </div>
         <div style="color: var(--color-violet); font-family: 'Orbitron', monospace; margin-bottom: 1rem;">${post.categoria} &bull; ${post.fecha}</div>
         <h1 style="font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin-bottom: 2rem; line-height: 1.2;">${post.titulo}</h1>
-        <div style="line-height: 1.8; font-size: 1.1rem; color: var(--text-secondary);">
+        <div style="line-height: 1.8; font-size: 1.1rem; color: #B0B0B0;">
             ${post.contenido}
         </div>
     `;
