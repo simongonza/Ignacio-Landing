@@ -41,7 +41,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700&family=Orbitron:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <!-- Preload + async main stylesheet -->
   <link rel="preload" href="css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -61,6 +61,17 @@
     .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:80px}
     h1,h2,h3,h4{font-family:'Orbitron',sans-serif;font-weight:700;line-height:1.2}
     h1{font-size:clamp(2rem,5vw,3.5rem)}
+
+    /* ── Mobile menu critical CSS (prevents FOUC on async stylesheet) ── */
+    .mobile-menu{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;min-height:100vh;background:rgba(10,10,10,.98);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);z-index:9000;-webkit-transform:translateX(100%);transform:translateX(100%);visibility:hidden;opacity:0;pointer-events:none;-webkit-transition:-webkit-transform .4s cubic-bezier(.4,0,.2,1),opacity .4s ease,visibility .4s ease;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s ease,visibility .4s ease;padding:80px 24px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+    @media(min-width:769px){.mobile-menu{display:none!important}}
+    .mobile-menu.active{-webkit-transform:translateX(0)!important;transform:translateX(0)!important;visibility:visible!important;opacity:1!important;pointer-events:all!important}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:9100;padding:8px;background:rgba(10,10,10,.4);border-radius:4px;border:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+    @media(max-width:768px){.hamburger{display:flex}}
+    .hamburger span{display:block;width:24px;height:2px;background:#F5F5F5;transition:all .3s cubic-bezier(.4,0,.2,1);border-radius:2px}
+    .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+    .hamburger.active span:nth-child(2){opacity:0}
+    .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
   </style>
 </head>
 
@@ -80,7 +91,7 @@
   <nav class="navbar" id="navbar">
     <div class="navbar__inner">
       <a href="index.html" class="navbar__logo" aria-label="Cynor Home">
-        <img src="src/Logo.png" alt="Cynor Logo" width="709" height="339" loading="eager">
+        <img src="src/Logo.png" alt="Cynor Logo" width="709" height="339" loading="eager" fetchpriority="high" decoding="async">
       </a>
       <div class="navbar__menu">
         <a href="index.html" class="navbar__link">Inicio</a>
@@ -106,29 +117,32 @@
     </div>
   </nav>
 
-  <div class="mobile-menu" id="mobileMenu">
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
     <a href="index.html">Inicio</a>
-    <div class="mobile-dropdown" style="text-align: center;">
-      <span style="display:block; padding:10px; font-family:'Orbitron', sans-serif; font-size:1.5rem; font-weight:600; color:var(--text-secondary); cursor:default;">Servicios ▼</span>
-      <div class="mobile-dropdown-content" style="display:flex; flex-direction:column; gap:15px; margin-top:10px;">
-        <a href="agentes-ia.html" style="font-size:1.1rem; color:var(--text-muted);">Agentes IA</a>
-        <a href="automatizacion.html" style="font-size:1.1rem; color:var(--text-muted);">Automatizaciones</a>
-        <a href="publicidad-digital.html" style="font-size:1.1rem; color:var(--text-muted);">Publicidad Digital</a>
-        <a href="desarrollo-web.html" style="font-size:1.1rem; color:var(--text-muted);">Desarrollo Web</a>
+    <div class="mobile-nav-dropdown" id="mobileServicesDropdown">
+      <button class="mobile-nav-dropdown__toggle" id="mobileServicesToggle" aria-expanded="false">
+        Servicios <span class="mobile-nav-dropdown__arrow">▼</span>
+      </button>
+      <div class="mobile-nav-dropdown__content">
+        <a href="agentes-ia.html">Agentes IA</a>
+        <a href="automatizacion.html">Automatizaciones</a>
+        <a href="publicidad-digital.html">Publicidad Digital</a>
+        <a href="desarrollo-web.html">Desarrollo Web</a>
       </div>
     </div>
     <a href="quienes-somos.html">Quiénes Somos</a>
     <a href="blog.html">Blog</a>
-    
     <a href="contacto.html">Contacto</a>
-    
+    <a href="https://wa.me/573128861517" class="btn btn--primary" target="_blank" rel="noopener noreferrer"
+      style="margin-top:8px;padding:12px 28px;font-size:1rem;">Hablemos →</a>
   </div>
 
   <!-- Legal Hero -->
   <section class="legal-hero">
     <div class="glow-orb glow-orb--violet" style="width: 400px; height: 400px; top: -30%; right: 10%;"></div>
     <div class="container container--narrow" style="position: relative; z-index: 1;">
-      <span class="page-hero__tag reveal">Legal</span>
+      <span class="page-hero__tag">Legal</span>
       <h1 class="legal-hero__title reveal delay-1">Políticas de Privacidad</h1>
       <p class="legal-hero__date reveal delay-2">Última actualización: 9 de abril de 2026</p>
     </div>

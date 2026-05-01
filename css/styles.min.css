@@ -73,6 +73,27 @@
   --navbar-height: 80px;
 }
 
+/* ---------- Font Fallback Metrics (reduces FOUT layout shift / CLS) ---------- */
+/* These @font-face rules create adjusted fallback fonts that closely match
+   the real web fonts' metrics, so text does NOT reflow when DM Sans / Orbitron load. */
+@font-face {
+  font-family: 'DM Sans Fallback';
+  src: local('Arial');
+  ascent-override: 94.56%;
+  descent-override: 24.74%;
+  line-gap-override: 0%;
+  size-adjust: 103.22%;
+}
+
+@font-face {
+  font-family: 'Orbitron Fallback';
+  src: local('Arial Bold');
+  ascent-override: 105%;
+  descent-override: 28%;
+  line-gap-override: 0%;
+  size-adjust: 88%;
+}
+
 /* ---------- Reset & Base ---------- */
 *,
 *::before,
@@ -90,7 +111,7 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', 'DM Sans Fallback', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.7;
@@ -108,6 +129,8 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+  /* Prevent layout shift when loading: preserve intrinsic aspect ratio */
+  aspect-ratio: auto;
 }
 
 ul,
@@ -147,7 +170,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Orbitron', 'Orbitron Fallback', sans-serif;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -248,7 +271,8 @@ p {
   align-items: center;
   gap: var(--space-sm);
   z-index: 1001;
-  animation: logo-entrance 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  /* Remove entrance animation — causes CLS (opacity:0 → visible = layout shift) */
+  /* animation: logo-entrance 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; */
 }
 
 @keyframes logo-entrance {
@@ -274,9 +298,10 @@ p {
 .navbar__logo img {
   height: 56px;
   width: auto;
+  /* Reserve exact space before image loads — prevents CLS */
+  aspect-ratio: 709 / 339;
   filter: invert(1) brightness(2);
-  transition: all var(--transition-base);
-  drop-shadow: 0 0 8px rgba(155, 143, 208, 0.3);
+  transition: filter var(--transition-base), transform var(--transition-base);
 }
 
 .navbar__logo img:hover {
@@ -389,12 +414,13 @@ p {
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
-  z-index: 1100; /* Increased to be above mobile-menu (1050) */
+  z-index: 9100; /* Above mobile-menu (9000) */
   padding: 8px;
   background: rgba(10, 10, 10, 0.4);
   border-radius: var(--radius-sm);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  border: none;
 }
 
 .hamburger span {
@@ -451,6 +477,9 @@ p {
   inset: 0;
   z-index: 1;
   overflow: hidden;
+  /* Isolate JS-injected particles from layout so they don't cause CLS */
+  contain: layout style;
+  pointer-events: none;
 }
 
 .hero__particle {
@@ -502,6 +531,8 @@ p {
   position: relative;
   z-index: 2;
   max-width: 750px;
+  /* Reserve vertical space before fonts and JS load — prevents CLS */
+  min-height: 420px;
 }
 
 .hero__badge {
@@ -889,9 +920,11 @@ p {
 
 .footer__brand img {
   height: 52px;
+  /* Preserve space before image loads */
+  aspect-ratio: 200 / 96;
   margin-bottom: var(--space-lg);
   filter: invert(1) brightness(2);
-  transition: all var(--transition-base);
+  transition: filter var(--transition-base), transform var(--transition-base);
 }
 
 .footer__brand img:hover {
@@ -1197,49 +1230,68 @@ textarea.form-control {
   color: var(--text-primary);
 }
 
-/* ---------- Animations ---------- */
+/* ---------- Scroll-reveal Animations ---------- */
+/* CLS NOTE: Elements below the fold start hidden — safe for CLS.
+   Above-the-fold reveals are excluded from this in the HTML
+   by ensuring only off-screen content uses .reveal classes.
+   will-change:transform prevents layout invalidation on animation. */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  /* Contain the stacking context so animations don't affect siblings */
+  contain: layout style;
 }
 
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
+  contain: none;
 }
 
 .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .reveal-left.visible {
   opacity: 1;
   transform: translateX(0);
+  will-change: auto;
 }
 
 .reveal-right {
   opacity: 0;
   transform: translateX(40px);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .reveal-right.visible {
   opacity: 1;
   transform: translateX(0);
+  will-change: auto;
 }
 
 .reveal-scale {
   opacity: 0;
   transform: scale(0.9);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .reveal-scale.visible {
   opacity: 1;
   transform: scale(1);
+  will-change: auto;
 }
 
 /* Stagger delays */
@@ -1952,48 +2004,53 @@ textarea.form-control {
    Compact spacing + collapsible Servicios
    ============================================ */
 .mobile-menu {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100vh;
-  height: -webkit-fill-available;
-  height: 100dvh;
-  background: rgba(10, 10, 10, 0.98);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  z-index: 1050; /* Increased to be above navbar (1000) but below hamburger (1001? no wait) */
+  /* Always rendered in DOM but hidden via transform+visibility */
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-lg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+  background: rgba(10, 10, 10, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 9000;
+  /* Hidden state: pushed off-screen + invisible */
   -webkit-transform: translateX(100%);
   transform: translateX(100%);
+  visibility: hidden;
+  opacity: 0;
   pointer-events: none;
-  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: var(--space-4xl) var(--space-xl);
+  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s ease;
+  padding: 80px var(--space-xl) var(--space-xl);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  /* Desktop: never show */
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .mobile-menu {
-    display: flex;
-    display: -webkit-box;
-    display: -webkit-flex;
+    display: none !important;
   }
 }
 
 .mobile-menu.active {
-  display: flex !important;
-  -webkit-transform: translateX(0);
-  transform: translateX(0);
-  pointer-events: all;
-  visibility: visible;
-  opacity: 1;
+  -webkit-transform: translateX(0) !important;
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: all !important;
 }
 
 .mobile-menu>a {
@@ -3275,5 +3332,33 @@ body::after {
 
   .dash-code__preview {
     padding: 8px 10px;
+  }
+}
+
+/* ============================================
+   PERFORMANCE: Accessibility & CLS safety
+   ============================================ */
+
+/* Disable all animations for users who prefer reduced motion.
+   Also prevents CLS from opacity:0 initial states being seen. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Make reveal elements immediately visible */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    contain: none !important;
+    will-change: auto !important;
   }
 }

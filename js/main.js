@@ -111,10 +111,28 @@ function initScrollReveal() {
   const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
   if (!reveals.length) return;
 
+  // CLS FIX: Immediately make visible any .reveal elements already in the
+  // initial viewport. If we don't, they start at opacity:0 / translateY and
+  // then animate in, which Lighthouse measures as layout shift.
+  reveals.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      // Already visible: mark without transition to avoid CLS
+      el.style.transition = 'none';
+      el.classList.add('visible');
+      // Re-enable transition after first frame so subsequent animations work
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.transition = '';
+        });
+      });
+    }
+  });
+
   const observerOptions = {
     root: null,
-    rootMargin: '0px 0px -80px 0px',
-    threshold: 0.1
+    rootMargin: '0px 0px -60px 0px',
+    threshold: 0.05
   };
 
   const observer = new IntersectionObserver((entries) => {
@@ -126,7 +144,12 @@ function initScrollReveal() {
     });
   }, observerOptions);
 
-  reveals.forEach(el => observer.observe(el));
+  reveals.forEach(el => {
+    // Only observe elements NOT already marked visible
+    if (!el.classList.contains('visible')) {
+      observer.observe(el);
+    }
+  });
 }
 
 /* ---------- Back to Top ---------- */
