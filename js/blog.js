@@ -116,6 +116,8 @@ function renderPost(post) {
     // UI toggles
     listContainer.style.display = 'none';
     postContainer.style.display = 'block';
+    postContainer.classList.add('visible'); // Fix for IntersectionObserver on tall elements
+
     
     // Optional: Update hero
     if(heroTitle) heroTitle.innerHTML = `<span style="font-size: 1.5rem; opacity: 0.8;">Blog Cynor</span>`;
