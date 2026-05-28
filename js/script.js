@@ -11,29 +11,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Sticky Header on Scroll
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
 
     // Mobile Menu Toggle
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('no-scroll');
-    });
-
-    // Close menu when clicking a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            menuToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            document.body.classList.remove('no-scroll');
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
         });
-    });
+
+        // Close menu when clicking a link
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+    }
 
     // Smooth Scroll for Navigation Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
-                const headerHeight = header.offsetHeight;
+                const headerHeight = header ? header.offsetHeight : 0;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
                 
                 window.scrollTo({

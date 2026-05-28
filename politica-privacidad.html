@@ -1,58 +1,263 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Política de Privacidad | Dr. Ignacio Alberto González Borrero</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Política de Privacidad del Dr. Ignacio Alberto González Borrero, neurocirujano en Medellín. Información sobre el tratamiento de sus datos personales.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/styles.css">
+    
     <style>
-        .legal-page { padding-top: 150px; padding-bottom: 100px; }
-        .legal-content { max-width: 800px; margin: 0 auto; line-height: 1.8; }
-        .legal-content h1 { margin-bottom: 40px; }
-        .legal-content h2 { margin: 30px 0 15px; font-size: 1.8rem; }
-        .legal-content p { margin-bottom: 20px; color: #444; }
-        .back-link { display: inline-block; margin-bottom: 30px; color: var(--secondary); font-weight: 500; }
+        .legal-page {
+            background-color: var(--light);
+            padding: 160px 0 100px;
+            min-height: calc(100vh - 400px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legal-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(76, 134, 158, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 80%, rgba(25, 74, 107, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .legal-card {
+            background: var(--white);
+            padding: 60px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-top: 6px solid var(--accent);
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+            transform: translateX(-5px);
+        }
+
+        .back-link svg {
+            width: 18px;
+            height: 18px;
+            transition: var(--transition);
+        }
+
+        .legal-title {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .legal-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .legal-intro {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .legal-card h2 {
+            color: var(--secondary);
+            font-size: 1.8rem;
+            margin: 45px 0 20px;
+            padding-left: 15px;
+            border-left: 4px solid var(--accent);
+            line-height: 1.3;
+        }
+
+        .legal-card p {
+            margin-bottom: 22px;
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .contact-box {
+            background: var(--light);
+            padding: 35px;
+            border-radius: 10px;
+            margin-top: 40px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .contact-box p {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .contact-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-box a {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .contact-box a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .legal-page {
+                padding: 120px 0 60px;
+            }
+            .legal-card {
+                padding: 35px 25px;
+            }
+            .legal-title {
+                font-size: 2.5rem;
+            }
+            .legal-card h2 {
+                font-size: 1.5rem;
+                margin: 35px 0 15px;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <header class="header scrolled">
+    <!-- Header -->
+    <header class="header scrolled" id="header">
         <div class="container header-container">
             <a href="index.html" class="logo-link">
-                <img src="assets/logo.png" alt="Logo" class="logo">
+                <img src="assets/logo.png" alt="Dr. Ignacio Alberto González Borrero Logo" class="logo">
             </a>
-            <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+            <a href="index.html" class="btn btn-outline header-btn">Volver al inicio</a>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="legal-page">
-        <div class="container legal-content">
-            <a href="index.html" class="back-link">← Volver al inicio</a>
-            <h1>Política de Privacidad</h1>
-            
-            <p>La presente Política de Privacidad establece los términos en que el <strong>Dr. Ignacio Alberto González Borrero</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de sus usuarios de acuerdo con la Ley 1581 de 2012 de Protección de Datos Personales en Colombia.</p>
+        <div class="container">
+            <div class="legal-card">
+                <a href="index.html" class="back-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Volver al inicio
+                </a>
+                
+                <h1 class="legal-title">Política de Privacidad</h1>
+                
+                <p class="legal-intro">La presente Política de Privacidad establece los términos en que el <strong>Dr. Ignacio Alberto González Borrero</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Estamos comprometidos con la seguridad de los datos de sus usuarios de acuerdo con la Ley 1581 de 2012 de Protección de Datos Personales en Colombia.</p>
 
-            <h2>Información Recogida</h2>
-            <p>Nuestro sitio web podrá recoger información personal como: Nombre, información de contacto como su dirección de correo electrónica e información demográfica. Así mismo, cuando sea necesario, podrá ser requerida información específica para procesar algún agendamiento de cita.</p>
+                <h2>Información Recogida</h2>
+                <p>Nuestro sitio web podrá recoger información personal como: Nombre, información de contacto como su dirección de correo electrónico e información demográfica. Así mismo, cuando sea necesario, podrá ser requerida información específica para procesar algún agendamiento de cita o responder a sus inquietudes.</p>
 
-            <h2>Uso de la Información</h2>
-            <p>Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, de pedidos en caso de que aplique, y mejorar nuestros servicios.</p>
+                <h2>Uso de la Información</h2>
+                <p>Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, gestionar el agendamiento y confirmación de citas médicas, y mejorar la calidad de nuestros servicios y la comunicación con el paciente.</p>
 
-            <h2>Seguridad y Confidencialidad</h2>
-            <p>El Dr. Ignacio Alberto González Borrero está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los sistemas más avanzados y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado.</p>
+                <h2>Seguridad y Confidencialidad</h2>
+                <p>El Dr. Ignacio Alberto González Borrero está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos sistemas y protocolos estándar y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado, pérdida o alteración de sus datos de carácter personal.</p>
 
-            <h2>Cookies</h2>
-            <p>Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea la cookie y sirve entonces para tener información respecto al tráfico web.</p>
+                <h2>Cookies</h2>
+                <p>Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea la cookie y sirve entonces para tener información respecto al tráfico web y facilitar las futuras visitas a una web recurrente.</p>
 
-            <h2>Control de su Información Personal</h2>
-            <p>En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web. No venderemos, cederemos ni distribuiremos la información personal que es recopilada sin su consentimiento, salvo que sea requerido por un juez con un orden judicial.</p>
+                <h2>Control de su Información Personal</h2>
+                <p>En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web de acuerdo con el derecho de Habeas Data. No venderemos, cederemos ni distribuiremos la información personal que es recopilada sin su consentimiento, salvo que sea requerido por un juez con una orden judicial de conformidad con la ley aplicable.</p>
+                
+                <div class="contact-box">
+                    <p><strong>Responsable del Tratamiento:</strong> Dr. Ignacio Alberto González Borrero</p>
+                    <p><strong>Ubicación:</strong> Clínica Las Américas, Torre Médica, CS 614, Medellín, Colombia</p>
+                    <p><strong>Teléfono de contacto:</strong> <a href="tel:+573011100046">+57 301 110 0046</a></p>
+                    <p><strong>Correo electrónico:</strong> <a href="mailto:igonzalezbo@gmail.com">igonzalezbo@gmail.com</a></p>
+                </div>
+            </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
-        <div class="container text-center">
-            <p>&copy; 2024 Dr. Ignacio Alberto González Borrero. Todos los derechos reservados.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Dr. Ignacio Alberto González Borrero" class="footer-logo">
+                    <p class="footer-desc">Excelencia y calidez humana en neurocirugía. Su salud en las mejores manos en Medellín, Colombia.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="footer-heading">Navegación</h4>
+                    <ul>
+                        <li><a href="index.html#inicio">Inicio</a></li>
+                        <li><a href="index.html#sobre-mi">Sobre mí</a></li>
+                        <li><a href="index.html#servicios">Servicios</a></li>
+                        <li><a href="index.html#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul>
+                        <li><a href="politica-privacidad.html">Política de Privacidad</a></li>
+                        <li><a href="terminos-condiciones.html">Términos y Condiciones</a></li>
+                        <li><a href="eliminacion-datos.html">Eliminación de Datos</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> Dr. Ignacio Alberto González Borrero. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
+
+    <script src="js/script.js"></script>
 </body>
+
 </html>
